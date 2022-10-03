@@ -1,23 +1,12 @@
 <script lang="ts">
-	import type { Slot } from 'src/routes/+page.server';
+	import type { Slot } from 'src/types/Slot';
 
 	const teste = 'cenas';
 
-	const urls = [
-		'https://jsonplaceholder.typicode.com/posts/1',
-		'https://jsonplaceholder.typicode.com/posts/2',
-		'https://jsonplaceholder.typicode.com/posts/3'
-	];
-
-	let slotsData;
-
-	// TODO: mudar para allSettled?
-	let promise = Promise.all(urls.map((url) => fetch(url).then((response) => response.json()))).then(
-		(data) => (slotsData = data)
-	);
-
 	export let bananas = 'bananas default';
-	export let slots: Slot[];
+	export let slots: Slot[][];
+
+	console.log('slots', slots);
 </script>
 
 <section>
@@ -26,16 +15,16 @@
 	</p>
 
 	<ul>
-		{#each slots as slot (slot.id)}
-			<li>{slot.start}</li>
+		{#each slots as slot}
+			{#if !!slot.length}
+				<li>
+					<strong>{slot[0].date}</strong>
+
+					{#each slot as slot1 (slot1.id)}
+						<p>{slot1.start}</p>
+					{/each}
+				</li>
+			{/if}
 		{/each}
 	</ul>
-
-	{#await promise}
-		<p>...waiting</p>
-	{:then slotsData}
-		<p>slotsData: {slotsData.map((data) => data.id)}</p>
-	{:catch error}
-		<p style="color: red">{error.message}</p>
-	{/await}
 </section>

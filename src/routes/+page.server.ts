@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import type { ClubId } from 'src/types/ClubId';
+import { ClubId } from '../types/ClubId';
 import type { Slot } from 'src/types/Slot';
 import type { PageServerLoad } from './$types';
 
@@ -23,54 +23,72 @@ const getNextFiveDaysDates = (): string[] => {
     return nextFiveDaysDates;
 }
 
-const fetchSlotsByClub = (clubId: ClubId) => {
+const fetchSlotsByClub = (clubId: ClubId): Promise<Slot[][]> => {
     const nextFiveDaysDates = getNextFiveDaysDates();
 
-    let slotsData;
-
-    // TODO: mudar para allSettled?
-    Promise.all(nextFiveDaysDates.map((date) => {
+    return Promise.allSettled(nextFiveDaysDates.map((date) => {
         const url = `https://www.aircourts.com/index.php/api/search_with_club/${clubId}?sport=${FUTEBOL_7_ID}&date=${date}&start_time=${DEFAULT_START_TIME}`;
+
+        console.log(url)
 
         return fetch(url).then((response) => response.json())
     })).then(
-        (data) => (slotsData = data)
+        (promiseResults) => {
+            return promiseResults.map(result => {
+                if (result.status === 'fulfilled' && result.value) {
+                    const slots = result.value.results[0].slots as Slot[];
+                    const availableSlots = slots.filter(
+                        (slot) => slot.locked === false && slot.lock_reason !== 'insufficient_duration'
+                    ) || [];
+                    return availableSlots
+                } else {
+                    return []
+                }
+            })
+        }
     );
 }
 
 export const load: PageServerLoad = async () => {
-    const response = await fetch(
-        // 'https://www.aircourts.com/index.php/api/search_with_club/411?sport=0&date=2022-10-01&start_time=20%3A00'
-        'https://jsonplaceholder.typicode.com/todos/1'
-    );
+    const slots = await fetchSlotsByClub(ClubId.Rainha);
 
-    if (response.status === 404) {
-        return {
-            slots: [] as Slot[]
-        };
-    }
+    // console.log('slots no server', slots)
 
-    if (response.status === 200) {
-        const data = (await response.json());
+    return {
+        slots: slots
+    };
+    // const response = await fetch(
+    //     // 'https://www.aircourts.com/index.php/api/search_with_club/411?sport=0&date=2022-10-01&start_time=20%3A00'
+    //     'https://jsonplaceholder.typicode.com/todos/1'
+    // );
 
-        // TODO: tirar isto, é só para o json placeholder
-        if (data.title) {
-            console.log(data)
+    // if (response.status === 404) {
+    //     return {
+    //         slots: [] as Slot[]
+    //     };
+    // }
 
-            return { slots: [] as Slot[] }
-        }
+    // if (response.status === 200) {
+    //     const data = (await response.json());
 
-        const slots = data.results[0].slots as Slot[];
-        const availableSlots = slots.filter(
-            (slot) => slot.locked === false && slot.lock_reason !== 'insufficient_duration'
-        );
+    //     // TODO: tirar isto, é só para o json placeholder
+    //     if (data.title) {
+    //         console.log(data)
 
-        console.log(availableSlots)
+    //         return { slots: [] as Slot[] }
+    //     }
 
-        return {
-            slots: availableSlots as Slot[]
-        };
-    }
+    //     const slots = data.results[0].slots as Slot[];
+    //     const availableSlots = slots.filter(
+    //         (slot) => slot.locked === false && slot.lock_reason !== 'insufficient_duration'
+    //     );
 
-    throw error(response.status);
+    //     console.log(availableSlots)
+
+    //     return {
+    //         slots: availableSlots as Slot[]
+    //     };
+    // }
+
+    // throw error(response.status);
 };
