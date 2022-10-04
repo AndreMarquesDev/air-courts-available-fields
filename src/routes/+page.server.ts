@@ -1,13 +1,13 @@
-import { error } from '@sveltejs/kit';
-import { ClubId } from '../types/ClubId';
 import type { Slot } from 'src/types/Slot';
+import { ClubId } from '../types/ClubId';
 import type { PageServerLoad } from './$types';
 
 const FUTEBOL_7_ID = 2;
 const DEFAULT_START_TIME = '20%3A00';
 
-const formatDate = (date: Date) => date.toLocaleString('en-CA', { timeZone: 'Europe/Lisbon' }).slice(0, 10)
-const addOneDayToDate = (date: Date) => date.setDate(date.getDate() + 1);
+const formatDate = (date: Date): string =>
+    date.toLocaleString('en-CA', { timeZone: 'Europe/Lisbon' }).slice(0, 10);
+const addOneDayToDate = (date: Date): number => date.setDate(date.getDate() + 1);
 
 const getNextFiveDaysDates = (): string[] => {
     const date = new Date();
@@ -15,47 +15,48 @@ const getNextFiveDaysDates = (): string[] => {
     const nextFiveDaysDates = [formatDate(date)];
 
     for (let index = 0; index < 4; index++) {
-        addOneDayToDate(date)
+        addOneDayToDate(date);
 
-        nextFiveDaysDates.push(formatDate(date))
+        nextFiveDaysDates.push(formatDate(date));
     }
 
     return nextFiveDaysDates;
-}
+};
 
 const fetchSlotsByClub = (clubId: ClubId): Promise<Slot[][]> => {
     const nextFiveDaysDates = getNextFiveDaysDates();
 
-    return Promise.allSettled(nextFiveDaysDates.map((date) => {
-        const url = `https://www.aircourts.com/index.php/api/search_with_club/${clubId}?sport=${FUTEBOL_7_ID}&date=${date}&start_time=${DEFAULT_START_TIME}`;
+    return Promise.allSettled(
+        nextFiveDaysDates.map(date => {
+            const url = `https://www.aircourts.com/index.php/api/search_with_club/${clubId}?sport=${FUTEBOL_7_ID}&date=${date}&start_time=${DEFAULT_START_TIME}`;
 
-        console.log(url)
+            console.log(url);
 
-        return fetch(url).then((response) => response.json())
-    })).then(
-        (promiseResults) => {
-            return promiseResults.map(result => {
-                if (result.status === 'fulfilled' && result.value) {
-                    const slots = result.value.results[0].slots as Slot[];
-                    const availableSlots = slots.filter(
-                        (slot) => slot.locked === false && slot.lock_reason !== 'insufficient_duration'
+            return fetch(url).then(response => response.json());
+        })
+    ).then(promiseResults => {
+        return promiseResults.map(result => {
+            if (result.status === 'fulfilled' && result.value) {
+                const slots = result.value.results[0].slots as Slot[];
+                const availableSlots =
+                    slots.filter(
+                        slot =>
+                            slot.locked === false && slot.lock_reason !== 'insufficient_duration'
                     ) || [];
-                    return availableSlots
-                } else {
-                    return []
-                }
-            })
-        }
-    );
-}
+
+                return availableSlots;
+            }
+
+            return [];
+        });
+    });
+};
 
 export const load: PageServerLoad = async () => {
     const slots = await fetchSlotsByClub(ClubId.Rainha);
 
-    // console.log('slots no server', slots)
-
     return {
-        slots: slots
+        slots,
     };
     // const response = await fetch(
     //     // 'https://www.aircourts.com/index.php/api/search_with_club/411?sport=0&date=2022-10-01&start_time=20%3A00'
