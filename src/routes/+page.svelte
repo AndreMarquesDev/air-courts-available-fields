@@ -4,7 +4,7 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    $: slots = data.slots;
+    $: clubInfo = data.clubInfo;
 </script>
 
 <svelte:head>
@@ -30,7 +30,7 @@
 
     <Counter />
 
-    <Slots {slots} bananas="bananas como prop" />
+    <Slots {clubInfo} bananas="bananas como prop" />
 </section>
 
 <style>

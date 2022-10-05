@@ -1,12 +1,16 @@
 <script lang="ts">
-    import type { Slot } from "src/types/Slot";
+    import type { ClubInfo } from "src/types/ClubInfo";
 
     const teste = "cenas";
 
-    export let bananas = "bananas default";
-    export let slots: Slot[][];
+    const capitalizeFirstLetter = (string: string): string => {
+        return string[0].toUpperCase() + string.slice(1);
+    };
 
-    console.log("slots", slots);
+    export let bananas = "bananas default";
+    export let clubInfo: ClubInfo[];
+
+    // console.log("clubInfo", clubInfo);
 </script>
 
 <section>
@@ -16,16 +20,27 @@
     </p>
 
     <ul>
-        {#each slots as slot}
-            {#if !!slot.length}
-                <li>
-                    <strong>{slot[0].date}</strong>
+        {#each clubInfo as club}
+            <li>
+                <strong
+                    >{club.date} - {capitalizeFirstLetter(club.weekday)}</strong
+                >
 
-                    {#each slot as slot1 (slot1.id)}
-                        <p>{slot1.start}</p>
-                    {/each}
-                </li>
-            {/if}
+                {#if !!club.slots.length}
+                    <div class="timeslots">
+                        {#each club.slots as slot (slot.id)}
+                            <p>{slot.start}</p>
+                        {/each}
+                    </div>
+                {/if}
+            </li>
         {/each}
     </ul>
 </section>
+
+<style>
+    .timeslots {
+        display: flex;
+        gap: 10px;
+    }
+</style>

@@ -1,3 +1,5 @@
+import type { ApiSlot } from 'src/types/ApiSlot';
+import type { ClubInfo, ClubInfoWithoutSlots } from 'src/types/ClubInfo';
 import type { Slot } from 'src/types/Slot';
 import { ClubId } from '../types/ClubId';
 import type { PageServerLoad } from './$types';
@@ -5,22 +7,61 @@ import type { PageServerLoad } from './$types';
 const FUTEBOL_7_ID = 2;
 const DEFAULT_START_TIME = '20%3A00';
 
-const formatDate = (date: Date): string =>
+// format date to dd/mm/yyyy
+const formatDate = (date: Date): string[] =>
+    date
+        .toLocaleString('pt-PT', {
+            timeZone: 'Europe/Lisbon',
+            weekday: 'long',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+        })
+        .split(', ');
+
+// format date to yyy-mm-dd
+const formatDateForApi = (date: Date): string =>
     date.toLocaleString('en-CA', { timeZone: 'Europe/Lisbon' }).slice(0, 10);
+
 const addOneDayToDate = (date: Date): number => date.setDate(date.getDate() + 1);
 
-const getNextFiveDaysDates = (): string[] => {
+// const getNextFiveDaysDates = (): { weekday: string; date: string; apiDate: string }[] => {
+const getNextFiveDaysDates = (): ClubInfoWithoutSlots[] => {
     const date = new Date();
 
-    const nextFiveDaysDates = [formatDate(date)];
+    const nextFiveDaysDates: ClubInfoWithoutSlots[] = [];
 
-    for (let index = 0; index < 4; index++) {
-        addOneDayToDate(date);
+    for (let index = 0; index < 5; index++) {
+        if (index > 0) {
+            addOneDayToDate(date);
+        }
 
-        nextFiveDaysDates.push(formatDate(date));
+        const [weekday, formattedDate] = formatDate(date);
+        const apiDate = formatDateForApi(date);
+
+        nextFiveDaysDates.push({
+            weekday,
+            date: formattedDate,
+            apiDate,
+        });
     }
 
     return nextFiveDaysDates;
+};
+
+const getAvailableSlots = (slots: ApiSlot[]): ApiSlot[] =>
+    slots.filter(slot => slot.locked === false && slot.lock_reason !== 'insufficient_duration') ||
+    [];
+
+// eslint-disable-next-line camelcase
+const pruneSlotData = ({ date, start, end, id, court_id }: ApiSlot): Slot => {
+    return {
+        date,
+        start,
+        end,
+        id,
+        courtId: court_id,
+    };
 };
 
 const fetchSlotsByClub = (clubId: ClubId): Promise<Slot[][]> => {
@@ -28,23 +69,18 @@ const fetchSlotsByClub = (clubId: ClubId): Promise<Slot[][]> => {
 
     return Promise.allSettled(
         nextFiveDaysDates.map(date => {
-            const url = `https://www.aircourts.com/index.php/api/search_with_club/${clubId}?sport=${FUTEBOL_7_ID}&date=${date}&start_time=${DEFAULT_START_TIME}`;
-
-            console.log(url);
+            const url = `https://www.aircourts.com/index.php/api/search_with_club/${clubId}?sport=${FUTEBOL_7_ID}&date=${date.apiDate}&start_time=${DEFAULT_START_TIME}`;
 
             return fetch(url).then(response => response.json());
         })
     ).then(promiseResults => {
         return promiseResults.map(result => {
             if (result.status === 'fulfilled' && result.value) {
-                const slots = result.value.results[0].slots as Slot[];
-                const availableSlots =
-                    slots.filter(
-                        slot =>
-                            slot.locked === false && slot.lock_reason !== 'insufficient_duration'
-                    ) || [];
+                const slots = result.value.results[0].slots as ApiSlot[];
+                const availableSlots = getAvailableSlots(slots);
+                const prunedAvailableSlots = availableSlots.map(slot => pruneSlotData(slot));
 
-                return availableSlots;
+                return prunedAvailableSlots;
             }
 
             return [];
@@ -53,43 +89,137 @@ const fetchSlotsByClub = (clubId: ClubId): Promise<Slot[][]> => {
 };
 
 export const load: PageServerLoad = async () => {
-    const slots = await fetchSlotsByClub(ClubId.Rainha);
+    // const slots = await fetchSlotsByClub(ClubId.Rainha);
+    const slots = mockSlots; // eslint-disable-line @typescript-eslint/no-use-before-define
+
+    const clubInfo = slots.map((slotsListByDate, index): ClubInfo => {
+        const slotDate = getNextFiveDaysDates()[index];
+
+        return {
+            ...slotDate,
+            slots: slotsListByDate,
+        };
+    });
 
     return {
-        slots,
+        // TODO: será clubInfo o melhor nome? Rever o nome do componente também
+        clubInfo,
     };
-    // const response = await fetch(
-    //     // 'https://www.aircourts.com/index.php/api/search_with_club/411?sport=0&date=2022-10-01&start_time=20%3A00'
-    //     'https://jsonplaceholder.typicode.com/todos/1'
-    // );
-
-    // if (response.status === 404) {
-    //     return {
-    //         slots: [] as Slot[]
-    //     };
-    // }
-
-    // if (response.status === 200) {
-    //     const data = (await response.json());
-
-    //     // TODO: tirar isto, é só para o json placeholder
-    //     if (data.title) {
-    //         console.log(data)
-
-    //         return { slots: [] as Slot[] }
-    //     }
-
-    //     const slots = data.results[0].slots as Slot[];
-    //     const availableSlots = slots.filter(
-    //         (slot) => slot.locked === false && slot.lock_reason !== 'insufficient_duration'
-    //     );
-
-    //     console.log(availableSlots)
-
-    //     return {
-    //         slots: availableSlots as Slot[]
-    //     };
-    // }
-
-    // throw error(response.status);
 };
+
+const mockSlots: Slot[][] = [
+    [
+        {
+            id: '32117286567',
+            date: '2022-10-04',
+            start: '23:00',
+            end: '23:30',
+            courtId: '1787',
+        },
+    ],
+    [
+        {
+            id: '32117286599',
+            date: '2022-10-05',
+            start: '21:00',
+            end: '21:30',
+            courtId: '1787',
+        },
+        {
+            id: '32117286600',
+            date: '2022-10-05',
+            start: '21:30',
+            end: '22:00',
+            courtId: '1787',
+        },
+        {
+            id: '32117286601',
+            date: '2022-10-05',
+            start: '22:00',
+            end: '22:30',
+            courtId: '1787',
+        },
+        {
+            id: '32117286602',
+            date: '2022-10-05',
+            start: '22:30',
+            end: '23:00',
+            courtId: '1787',
+        },
+        {
+            id: '32117286603',
+            date: '2022-10-05',
+            start: '23:00',
+            end: '23:30',
+            courtId: '1787',
+        },
+    ],
+    [],
+    [
+        {
+            id: '32117286630',
+            date: '2022-10-07',
+            start: '21:00',
+            end: '21:30',
+            courtId: '1787',
+        },
+        {
+            id: '32117286631',
+            date: '2022-10-07',
+            start: '21:30',
+            end: '22:00',
+            courtId: '1787',
+        },
+        {
+            id: '32117286632',
+            date: '2022-10-07',
+            start: '22:00',
+            end: '22:30',
+            courtId: '1787',
+        },
+        {
+            id: '32117286633',
+            date: '2022-10-07',
+            start: '22:30',
+            end: '23:00',
+            courtId: '1787',
+        },
+        {
+            id: '32117286634',
+            date: '2022-10-07',
+            start: '23:00',
+            end: '23:30',
+            courtId: '1787',
+        },
+    ],
+    [
+        {
+            id: '32117286664',
+            date: '2022-10-08',
+            start: '20:00',
+            end: '20:30',
+            courtId: '1787',
+        },
+        {
+            id: '32117286668',
+            date: '2022-10-08',
+            start: '22:00',
+            end: '22:30',
+            courtId: '1787',
+        },
+        {
+            id: '32117286669',
+            date: '2022-10-08',
+            start: '22:30',
+            end: '23:00',
+            courtId: '1787',
+        },
+        {
+            id: '32117286670',
+            date: '2022-10-08',
+            start: '23:00',
+            end: '23:30',
+            courtId: '1787',
+        },
+    ],
+];
