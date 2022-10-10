@@ -4,6 +4,7 @@
 
     export let data: PageData;
     $: clubInfo = data.clubInfo;
+    $: teste = data.teste;
 </script>
 
 <svelte:head>
@@ -12,6 +13,7 @@
 </svelte:head>
 
 <section>
+    <h1>{teste}</h1>
     <Slots {clubInfo} />
 </section>
 

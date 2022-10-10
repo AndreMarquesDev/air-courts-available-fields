@@ -4,6 +4,8 @@ import { getNextFiveDaysDates } from '../utils/dateHelpers';
 import { ClubId } from '../types/ClubId';
 import type { PageServerLoad } from './$types';
 
+export const prerender = false;
+
 export const load: PageServerLoad = async () => {
     const nextFiveDaysDates = getNextFiveDaysDates();
     const slots = await getFilteredDataFromApi(ClubId.Rainha, nextFiveDaysDates);
@@ -21,5 +23,6 @@ export const load: PageServerLoad = async () => {
     return {
         // TODO: será clubInfo o melhor nome? Rever o nome do componente também
         clubInfo,
+        teste: `${new Date().getHours()}h${new Date().getMinutes()} - ${new Date().getSeconds()}`,
     };
 };
