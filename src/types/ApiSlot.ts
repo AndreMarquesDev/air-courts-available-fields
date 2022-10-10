@@ -11,3 +11,11 @@ export interface ApiSlot {
     durations: number[];
     lock_reason?: string; // eslint-disable-line camelcase
 }
+
+export interface ApiRawData {
+    results: {
+        slots: ApiSlot[];
+    }[];
+    favorite: boolean;
+    ratings: unknown;
+}

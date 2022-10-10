@@ -1,23 +1,18 @@
 <script lang="ts">
+    import { ClubId } from "../../types/ClubId";
     import type { ClubInfo } from "src/types/ClubInfo";
-
-    const teste = "cenas";
 
     const capitalizeFirstLetter = (string: string): string => {
         return string[0].toUpperCase() + string.slice(1);
     };
 
-    export let bananas = "bananas default";
     export let clubInfo: ClubInfo[];
 
     // console.log("clubInfo", clubInfo);
 </script>
 
 <section>
-    <p>
-        My custom component with the variable <strong>{teste}</strong> and
-        <strong>{bananas}</strong>
-    </p>
+    <h1>{ClubId[clubInfo[0].clubId]}</h1>
 
     <ul>
         {#each clubInfo as club}
@@ -28,8 +23,11 @@
 
                 {#if !!club.slots.length}
                     <div class="timeslots">
-                        {#each club.slots as slot (slot.id)}
-                            <p>{slot.start}</p>
+                        {#each club.slots as slot, index (slot.id)}
+                            <p>
+                                {slot.start}
+                                {club.slots.length === index + 1 ? "" : "|"}
+                            </p>
                         {/each}
                     </div>
                 {/if}
