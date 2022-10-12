@@ -18,12 +18,12 @@ const formatDateForApi = (date: Date): string =>
 
 const addOneDayToDate = (date: Date): number => date.setDate(date.getDate() + 1);
 
-export const getNextFiveDaysDates = (): ClubInfoWithoutSlots[] => {
+export const getNextSevenDaysDates = (): ClubInfoWithoutSlots[] => {
     const date = new Date();
 
-    const nextFiveDaysDates: ClubInfoWithoutSlots[] = [];
+    const nextSevenDaysDates: ClubInfoWithoutSlots[] = [];
 
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < 7; index++) {
         if (index > 0) {
             addOneDayToDate(date);
         }
@@ -31,12 +31,12 @@ export const getNextFiveDaysDates = (): ClubInfoWithoutSlots[] => {
         const [weekday, formattedDate] = formatDate(date);
         const apiDate = formatDateForApi(date);
 
-        nextFiveDaysDates.push({
+        nextSevenDaysDates.push({
             weekday,
             date: formattedDate,
             apiDate,
         });
     }
 
-    return nextFiveDaysDates;
+    return nextSevenDaysDates;
 };

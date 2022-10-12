@@ -1,15 +1,15 @@
 import type { ClubData } from 'src/types/ClubData';
 import { buildClubInfo, clubsList, getFilteredDataFromApi } from '../utils/apiDataHelpers';
-import { getNextFiveDaysDates } from '../utils/dateHelpers';
+import { getNextSevenDaysDates } from '../utils/dateHelpers';
 import type { PageServerLoad } from './$types';
 
 export const prerender = false;
 
 export const load: PageServerLoad = async () => {
-    const nextFiveDaysDates = getNextFiveDaysDates();
+    const nextSevenDaysDates = getNextSevenDaysDates();
 
     const arrayOfPromises = await Promise.allSettled(
-        clubsList.map(club => getFilteredDataFromApi(club, nextFiveDaysDates))
+        clubsList.map(club => getFilteredDataFromApi(club, nextSevenDaysDates))
     );
 
     const dataByClub: ClubData[] = arrayOfPromises.map((result, index) => {
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async () => {
 
         if (hasData) {
             const clubSlotsForNext5Days = result.value;
-            const clubSlotsByDateList = buildClubInfo(clubSlotsForNext5Days, nextFiveDaysDates);
+            const clubSlotsByDateList = buildClubInfo(clubSlotsForNext5Days, nextSevenDaysDates);
 
             return {
                 clubId: clubsList[index],

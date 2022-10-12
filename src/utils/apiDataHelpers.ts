@@ -43,10 +43,10 @@ const fetchClubDataForDay = (clubId: ClubId, date: ClubInfoWithoutSlots): Promis
 
 export const getFilteredDataFromApi = (
     clubId: ClubId,
-    nextFiveDaysDates: ClubInfoWithoutSlots[]
+    nextSevenDaysDates: ClubInfoWithoutSlots[]
 ): Promise<Slot[][]> => {
     const apiRawDataPromise = Promise.allSettled(
-        nextFiveDaysDates.map(date => fetchClubDataForDay(clubId, date))
+        nextSevenDaysDates.map(date => fetchClubDataForDay(clubId, date))
     );
 
     return apiRawDataPromise.then(promiseResults => {
@@ -66,10 +66,10 @@ export const getFilteredDataFromApi = (
 
 export const buildClubInfo = (
     clubSlotsForNext5Days: Slot[][],
-    nextFiveDaysDates: ClubInfoWithoutSlots[]
+    nextSevenDaysDates: ClubInfoWithoutSlots[]
 ): ClubSlotsByDate[] => {
     return clubSlotsForNext5Days.map((slotsListByDate, index) => {
-        const slotDate = nextFiveDaysDates[index];
+        const slotDate = nextSevenDaysDates[index];
 
         return {
             ...slotDate,
