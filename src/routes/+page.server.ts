@@ -32,7 +32,7 @@ export const load: PageServerLoad = async () => {
     });
 
     return {
-        date: `${new Date().getHours()}h${new Date().getMinutes()} - ${new Date().getSeconds()}`,
+        date: `${new Date().getHours()}h${new Date().getMinutes()}`,
         allClubsInfo: dataByClub,
     };
 };

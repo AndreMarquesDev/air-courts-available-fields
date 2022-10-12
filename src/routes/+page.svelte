@@ -1,31 +1,32 @@
 <script lang="ts">
-    import Slots from "$lib/Slots/Slots.svelte";
+    import Slots from "src/components/Slots/Slots.svelte";
     import type { PageData } from "./$types";
 
     export let data: PageData;
+
     $: date = data.date;
     $: allClubsInfo = data.allClubsInfo;
-
-    // console.log(data.allClubsInfo);
 </script>
 
 <svelte:head>
-    <title>Home</title>
-    <meta name="description" content="Svelte demo app" />
+    <title>air-courts-available-fields</title>
 </svelte:head>
 
 <section>
-    <h1>{date}</h1>
-
     {#each allClubsInfo as clubsInfoList}
         <Slots clubData={clubsInfoList} />
     {/each}
+
+    <p>{date}</p>
 </section>
 
 <style>
-    h1 {
+    p {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
-        text-align: center;
+        text-align: left;
     }
     section {
         display: flex;
