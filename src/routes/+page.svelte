@@ -3,8 +3,10 @@
     import type { PageData } from "./$types";
 
     export let data: PageData;
-    $: clubInfo = data.clubInfo;
-    $: teste = data.teste;
+    $: date = data.date;
+    $: allClubsInfo = data.allClubsInfo;
+
+    // console.log(data.allClubsInfo);
 </script>
 
 <svelte:head>
@@ -13,16 +15,21 @@
 </svelte:head>
 
 <section>
-    <h1>{teste}</h1>
-    <Slots {clubInfo} />
+    <h1>{date}</h1>
+
+    {#each allClubsInfo as clubsInfoList}
+        <Slots clubData={clubsInfoList} />
+    {/each}
 </section>
 
 <style>
+    h1 {
+        width: 100%;
+        text-align: center;
+    }
     section {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        flex: 1;
+        align-items: flex-start;
     }
 </style>

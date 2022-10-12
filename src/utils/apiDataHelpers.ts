@@ -1,10 +1,17 @@
 import type { ApiRawData, ApiSlot } from 'src/types/ApiSlot';
-import type { ClubId } from 'src/types/ClubId';
-import type { ClubInfoWithoutSlots } from 'src/types/ClubInfo';
+import type { ClubInfoWithoutSlots, ClubSlotsByDate } from 'src/types/ClubSlotsByDate';
 import type { Slot } from 'src/types/Slot';
+import { ClubId } from '../types/ClubId';
 
 const FUTEBOL_7_ID = 2;
 const DEFAULT_START_TIME = '20%3A00'; // 20:00
+
+export const clubsList: ClubId[] = [
+    ClubId.Rainha,
+    ClubId.Miraflores,
+    ClubId.Restelo,
+    ClubId.Marquês,
+];
 
 const getAvailableSlots = (slots: ApiSlot[]): ApiSlot[] =>
     slots.filter(slot => slot.locked === false && slot.lock_reason !== 'insufficient_duration') ||
@@ -21,7 +28,7 @@ const pruneSlotData = ({ date, start, end, id, court_id }: ApiSlot): Slot => {
     };
 };
 
-const getFilteredSlots = (slots: ApiSlot[]): Slot[] => {
+export const getFilteredSlots = (slots: ApiSlot[]): Slot[] => {
     const availableSlots = getAvailableSlots(slots);
     const prunedAvailableSlots = availableSlots.map(slot => pruneSlotData(slot));
 
@@ -54,5 +61,19 @@ export const getFilteredDataFromApi = (
 
             return [];
         });
+    });
+};
+
+export const buildClubInfo = (
+    clubSlotsForNext5Days: Slot[][],
+    nextFiveDaysDates: ClubInfoWithoutSlots[]
+): ClubSlotsByDate[] => {
+    return clubSlotsForNext5Days.map((slotsListByDate, index) => {
+        const slotDate = nextFiveDaysDates[index];
+
+        return {
+            ...slotDate,
+            slots: slotsListByDate,
+        };
     });
 };

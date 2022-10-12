@@ -1,4 +1,4 @@
-import type { ClubInfoWithoutSlots } from 'src/types/ClubInfo';
+import type { ClubInfoWithoutSlots } from 'src/types/ClubSlotsByDate';
 
 // format date to dd/mm/yyyy
 const formatDate = (date: Date): string[] =>

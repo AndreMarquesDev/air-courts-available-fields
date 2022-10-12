@@ -1,21 +1,19 @@
 <script lang="ts">
     import { ClubId } from "../../types/ClubId";
-    import type { ClubInfo } from "src/types/ClubInfo";
+    import type { ClubData } from "src/types/ClubData";
 
     const capitalizeFirstLetter = (string: string): string => {
         return string[0].toUpperCase() + string.slice(1);
     };
 
-    export let clubInfo: ClubInfo[];
-
-    // console.log("clubInfo", clubInfo);
+    export let clubData: ClubData;
 </script>
 
 <section>
-    <h1>{ClubId[clubInfo[0].clubId]}</h1>
+    <h1>{ClubId[clubData.clubId]}</h1>
 
     <ul>
-        {#each clubInfo as club}
+        {#each clubData.clubSlotsByDateList as club}
             <li>
                 <strong
                     >{club.date} - {capitalizeFirstLetter(club.weekday)}</strong
@@ -37,6 +35,10 @@
 </section>
 
 <style>
+    h1 {
+        text-align: left;
+    }
+
     .timeslots {
         display: flex;
         gap: 10px;
