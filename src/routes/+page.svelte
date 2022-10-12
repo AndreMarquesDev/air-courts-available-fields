@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Slots from "src/components/Slots/Slots.svelte";
+    import Slots from "../../src/components/Slots/Slots.svelte";
     import type { PageData } from "./$types";
 
     export let data: PageData;
@@ -24,9 +24,9 @@
     p {
         position: absolute;
         top: 0;
-        left: 0;
+        right: 0;
         width: 100%;
-        text-align: left;
+        text-align: right;
     }
     section {
         display: flex;

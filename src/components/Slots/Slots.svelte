@@ -7,6 +7,8 @@
     };
 
     export let clubData: ClubData;
+
+    // TODO: add links to clubs
 </script>
 
 <section>
@@ -15,7 +17,7 @@
     <ul>
         {#each clubData.clubSlotsByDateList as club}
             <li>
-                <strong
+                <strong class:dayWithNoSlots={!club.slots.length}
                     >{club.date} - {capitalizeFirstLetter(club.weekday)}</strong
                 >
 
@@ -37,11 +39,26 @@
 <style>
     h1 {
         text-align: left;
+        margin: 0;
+    }
+
+    ul {
+        list-style-type: disc;
+    }
+
+    li {
+        margin: 4px 0;
+    }
+
+    .dayWithNoSlots {
+        text-decoration: line-through;
+        font-weight: normal;
     }
 
     .timeslots {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
+        margin-top: 1px;
     }
 </style>
