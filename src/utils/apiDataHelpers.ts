@@ -5,6 +5,7 @@ import { ClubId } from '../types/ClubId';
 
 const FUTEBOL_7_ID = 2;
 const DEFAULT_START_TIME = '20%3A00'; // 20:00
+const afterHoursTimeslots = ['23:30', '00:00', '00:30', '01:00'];
 
 export const clubsList: ClubId[] = [
     ClubId.Rainha,
@@ -13,9 +14,20 @@ export const clubsList: ClubId[] = [
     ClubId.Marquês,
 ];
 
-const getAvailableSlots = (slots: ApiSlot[]): ApiSlot[] =>
-    slots.filter(slot => slot.locked === false && slot.lock_reason !== 'insufficient_duration') ||
-    [];
+const getAvailableSlots = (slots: ApiSlot[]): ApiSlot[] => {
+    const availableSlots =
+        slots.filter(slot => {
+            const slotIsNotLocked = slot.locked === false;
+            const slotIsAtLeast60Minutes = slot.lock_reason !== 'insufficient_duration';
+            const slotIsNotAfterHours = !afterHoursTimeslots.some(
+                timeslot => timeslot === slot.start
+            );
+
+            return slotIsNotLocked && slotIsAtLeast60Minutes && slotIsNotAfterHours;
+        }) || [];
+
+    return availableSlots;
+};
 
 // eslint-disable-next-line camelcase
 const pruneSlotData = ({ date, start, end, id, court_id }: ApiSlot): Slot => {
