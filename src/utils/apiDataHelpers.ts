@@ -3,8 +3,8 @@ import type { ClubInfoWithoutSlots, ClubSlotsByDate } from 'src/types/ClubSlotsB
 import type { Slot } from 'src/types/Slot';
 import { ClubId } from '../types/ClubId';
 
+export const DEFAULT_START_TIME = '20%3A00'; // 20:00
 const FUTEBOL_7_ID = 2;
-const DEFAULT_START_TIME = '20%3A00'; // 20:00
 const afterHoursTimeslots = ['23:30', '00:00', '00:30', '01:00'];
 
 export const clubsList: ClubId[] = [

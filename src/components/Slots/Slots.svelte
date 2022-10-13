@@ -1,10 +1,14 @@
 <script lang="ts">
     import { ClubId } from "../../types/ClubId";
     import type { ClubData } from "src/types/ClubData";
+    import type { Slot } from "src/types/Slot";
+    import { DEFAULT_START_TIME } from "../../utils/apiDataHelpers";
 
     const capitalizeFirstLetter = (string: string): string => {
         return string[0].toUpperCase() + string.slice(1);
     };
+
+    const isDayWithSlots = (slotsList: Slot[]): boolean => !!slotsList.length;
 
     export let clubData: ClubData;
 </script>
@@ -15,12 +19,25 @@
     <ul>
         {#each clubData.clubSlotsByDateList as club}
             <li
-                class:dayWithNoSlots={!club.slots.length}
-                class:dayWithSlots={!!club.slots.length}
+                class:dayWithNoSlots={!isDayWithSlots(club.slots)}
+                class:dayWithSlots={isDayWithSlots(club.slots)}
             >
-                <strong
-                    >{club.date} - {capitalizeFirstLetter(club.weekday)}</strong
-                >
+                {#if isDayWithSlots(club.slots)}
+                    <a
+                        href={`https://www.aircourts.com/index.php/site/view_club/${clubData.clubId}/${club.apiDate}/${DEFAULT_START_TIME}`}
+                        target="_blank"
+                    >
+                        <strong
+                            >{club.date} - {capitalizeFirstLetter(
+                                club.weekday
+                            )}</strong
+                        >
+                    </a>
+                {:else}
+                    <p class="strikethrough">
+                        {club.date} - {capitalizeFirstLetter(club.weekday)}
+                    </p>
+                {/if}
 
                 {#if !!club.slots.length}
                     <div class="timeslotsWrapper">
@@ -54,9 +71,8 @@
         color: gray;
     }
 
-    .dayWithNoSlots strong {
+    .strikethrough {
         text-decoration: line-through;
-        font-weight: normal;
     }
 
     .timeslotsWrapper {
