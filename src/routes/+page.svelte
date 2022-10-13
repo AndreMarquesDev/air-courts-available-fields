@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-    <title>air-courts-available-fields</title>
+    <title>⚽ AirCourts | campos e horários disponíveis ⚽</title>
 </svelte:head>
 
 <section>

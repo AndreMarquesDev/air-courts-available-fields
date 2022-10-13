@@ -7,8 +7,6 @@
     };
 
     export let clubData: ClubData;
-
-    // TODO: add links to clubs
 </script>
 
 <section>
@@ -16,19 +14,20 @@
 
     <ul>
         {#each clubData.clubSlotsByDateList as club}
-            <li>
-                <strong class:dayWithNoSlots={!club.slots.length}
+            <li
+                class:dayWithNoSlots={!club.slots.length}
+                class:dayWithSlots={!!club.slots.length}
+            >
+                <strong
                     >{club.date} - {capitalizeFirstLetter(club.weekday)}</strong
                 >
 
                 {#if !!club.slots.length}
-                    <div class="timeslots">
-                        {#each club.slots as slot, index (slot.id)}
-                            <p>
+                    <div class="timeslotsWrapper">
+                        {#each club.slots as slot (slot.id)}
+                            <p class="timeslot">
                                 {slot.start}
-                                {club.slots.length === index + 1 ? "" : "|"}
-                            </p>
-                        {/each}
+                            </p>{/each}
                     </div>
                 {/if}
             </li>
@@ -42,23 +41,40 @@
         margin: 0;
     }
 
-    ul {
-        list-style-type: disc;
+    li {
+        margin: 5px 0;
     }
 
-    li {
-        margin: 4px 0;
+    .dayWithSlots {
+        list-style-type: "⚽ ";
     }
 
     .dayWithNoSlots {
+        list-style-type: "❌ ";
+        color: gray;
+    }
+
+    .dayWithNoSlots strong {
         text-decoration: line-through;
         font-weight: normal;
     }
 
-    .timeslots {
+    .timeslotsWrapper {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 1px;
+        column-gap: 10px;
+        margin-top: 5px;
+    }
+
+    .timeslot {
+        min-width: 43px;
+        position: relative;
+        text-align: center;
+    }
+
+    .timeslot:not(:last-child)::after {
+        content: "|";
+        position: absolute;
+        right: -7px;
     }
 </style>
