@@ -9,7 +9,10 @@
 </script>
 
 <svelte:head>
-    <title>⚽ AirCourts | campos e horários disponíveis ⚽</title>
+    <title
+        >⚽ Pontapés na Atmosfera | campos e horários disponíveis no AirCourts
+        ⚽</title
+    >
 </svelte:head>
 
 <section>

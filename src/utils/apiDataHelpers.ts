@@ -1,6 +1,7 @@
 import type { ApiRawData, ApiSlot } from 'src/types/ApiSlot';
+import type { ApiSlotPrice } from 'src/types/ApiSlotPrice';
 import type { ClubInfoWithoutSlots, ClubSlotsByDate } from 'src/types/ClubSlotsByDate';
-import type { Slot } from 'src/types/Slot';
+import type { Slot, SlotWithoutPrice } from 'src/types/Slot';
 import { ClubId } from '../types/ClubId';
 
 export const DEFAULT_START_TIME = '20%3A00'; // 20:00
@@ -30,7 +31,7 @@ const getAvailableSlots = (slots: ApiSlot[]): ApiSlot[] => {
 };
 
 // eslint-disable-next-line camelcase
-const pruneSlotData = ({ date, start, end, id, court_id }: ApiSlot): Slot => {
+const pruneSlotData = ({ date, start, end, id, court_id }: ApiSlot): SlotWithoutPrice => {
     return {
         date,
         start,
@@ -40,7 +41,42 @@ const pruneSlotData = ({ date, start, end, id, court_id }: ApiSlot): Slot => {
     };
 };
 
-export const getFilteredSlots = (slots: ApiSlot[]): Slot[] => {
+const fetchPricesByTimeslot = (slot: SlotWithoutPrice): Promise<ApiSlotPrice> => {
+    const { courtId, date, start, end } = slot;
+    const url = `https://www.aircourts.com/index.php/api/calculate_booking_price/${courtId}/${date}/${start}/${end}/0/1?tier=0&user_id=0`;
+
+    return fetch(url).then(res => res.json());
+};
+
+const addPriceToSlot = (slot: SlotWithoutPrice, apiSlotPrice: ApiSlotPrice): Slot => ({
+    ...slot,
+    price: apiSlotPrice.price,
+    priceMultipliedBy2: parseFloat(apiSlotPrice.price) * 2,
+});
+
+const getPrices = async (slots: SlotWithoutPrice[]): Promise<Slot[]> => {
+    const arrayOfPromisesOfFetchedPricesByTimeslot = slots.map(slot =>
+        fetchPricesByTimeslot(slot).then(apiSlotPrice => addPriceToSlot(slot, apiSlotPrice))
+    );
+
+    const arrayOfSettledPromises = await Promise.allSettled(
+        arrayOfPromisesOfFetchedPricesByTimeslot
+    );
+
+    const arrayOfSlotsWithPrices = arrayOfSettledPromises.map(result => {
+        const resultHasData = result.status === 'fulfilled' && !!result.value;
+
+        if (resultHasData) {
+            return result.value;
+        }
+
+        return undefined;
+    });
+
+    return arrayOfSlotsWithPrices.filter((slot): slot is Slot => typeof slot !== 'undefined');
+};
+
+const getFilteredSlots = (slots: ApiSlot[]): SlotWithoutPrice[] => {
     const availableSlots = getAvailableSlots(slots);
     const prunedAvailableSlots = availableSlots.map(slot => pruneSlotData(slot));
 
@@ -53,27 +89,28 @@ const fetchClubDataForDay = (clubId: ClubId, date: ClubInfoWithoutSlots): Promis
     return fetch(url).then(response => response.json());
 };
 
-export const getFilteredDataFromApi = (
+export const getFilteredDataFromApi = async (
     clubId: ClubId,
     nextSevenDaysDates: ClubInfoWithoutSlots[]
-): Promise<Slot[][]> => {
-    const apiRawDataPromise = Promise.allSettled(
+): Promise<Promise<Slot[]>[]> => {
+    const arrayOfSettledPromises = await Promise.allSettled(
         nextSevenDaysDates.map(date => fetchClubDataForDay(clubId, date))
     );
 
-    return apiRawDataPromise.then(promiseResults => {
-        return promiseResults.map(result => {
-            const hasData = result.status === 'fulfilled' && result.value;
+    const arrayOfSlotsWithoutPrices = arrayOfSettledPromises.map(async result => {
+        const hasData = result.status === 'fulfilled' && !!result.value;
 
-            if (hasData) {
-                const slots = getFilteredSlots(result.value.results[0].slots);
+        if (hasData) {
+            const slots = getFilteredSlots(result.value.results[0].slots);
+            const slotsWithPrices = await getPrices(slots);
 
-                return slots;
-            }
+            return slotsWithPrices;
+        }
 
-            return [];
-        });
+        return [];
     });
+
+    return arrayOfSlotsWithoutPrices;
 };
 
 export const buildClubInfo = (

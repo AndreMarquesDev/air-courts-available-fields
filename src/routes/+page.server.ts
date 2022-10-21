@@ -8,12 +8,27 @@ export const prerender = false;
 export const load: PageServerLoad = async () => {
     const nextSevenDaysDates = getNextSevenDaysDates();
 
-    const arrayOfPromises = await Promise.allSettled(
-        clubsList.map(club => getFilteredDataFromApi(club, nextSevenDaysDates))
-    );
+    const arrayOfPromisesOfArrayOfSlots = clubsList.map(async club => {
+        const filteredSlots = await getFilteredDataFromApi(club, nextSevenDaysDates);
+        const arrayOfSettledPromises = await Promise.allSettled(filteredSlots);
+
+        const arrayOfSlots = arrayOfSettledPromises.map(result => {
+            const hasData = result.status === 'fulfilled' && !!result.value;
+
+            if (hasData) {
+                return result.value;
+            }
+
+            return [];
+        });
+
+        return arrayOfSlots;
+    });
+
+    const arrayOfPromises = await Promise.allSettled(arrayOfPromisesOfArrayOfSlots);
 
     const dataByClub: ClubData[] = arrayOfPromises.map((result, index) => {
-        const hasData = result.status === 'fulfilled' && result.value;
+        const hasData = result.status === 'fulfilled' && !!result.value;
 
         if (hasData) {
             const clubSlotsForNext5Days = result.value;

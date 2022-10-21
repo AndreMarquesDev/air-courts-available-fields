@@ -16,7 +16,7 @@
 <section>
     <h1>{ClubId[clubData.clubId]}</h1>
 
-    <ul>
+    <ul class="listOfDays">
         {#each clubData.clubSlotsByDateList as club}
             <li
                 class:dayWithNoSlots={!isDayWithSlots(club.slots)}
@@ -33,19 +33,27 @@
                             )}</strong
                         >
                     </a>
+
+                    <ul class="timeslotsWrapper">
+                        {#each club.slots as slot (slot.id)}
+                            <li class="timeslot">
+                                <p>
+                                    {slot.start}
+                                </p>
+                                <p
+                                    class="price"
+                                    class:highPrice={slot.priceMultipliedBy2 >
+                                        50}
+                                >
+                                    {slot.priceMultipliedBy2}€
+                                </p>
+                            </li>
+                        {/each}
+                    </ul>
                 {:else}
                     <p class="strikethrough">
                         {club.date} - {capitalizeFirstLetter(club.weekday)}
                     </p>
-                {/if}
-
-                {#if !!club.slots.length}
-                    <div class="timeslotsWrapper">
-                        {#each club.slots as slot (slot.id)}
-                            <p class="timeslot">
-                                {slot.start}
-                            </p>{/each}
-                    </div>
                 {/if}
             </li>
         {/each}
@@ -58,8 +66,10 @@
         margin: 0;
     }
 
-    li {
-        margin: 5px 0;
+    @media (max-width: 440px) {
+        .listOfDays {
+            padding-left: 15px;
+        }
     }
 
     .dayWithSlots {
@@ -71,6 +81,11 @@
         color: gray;
     }
 
+    .dayWithSlots,
+    .dayWithNoSlots {
+        margin: 7px 0;
+    }
+
     .strikethrough {
         text-decoration: line-through;
     }
@@ -78,8 +93,10 @@
     .timeslotsWrapper {
         display: flex;
         flex-wrap: wrap;
-        column-gap: 10px;
+        gap: 10px;
         margin-top: 5px;
+        list-style-type: none;
+        padding: 0;
     }
 
     .timeslot {
@@ -88,9 +105,33 @@
         text-align: center;
     }
 
-    .timeslot:not(:last-child)::after {
-        content: "|";
+    .timeslot::before {
+        content: "";
         position: absolute;
-        right: -7px;
+        top: 17px;
+        left: 50%;
+        width: 1px;
+        height: 20%;
+        background: black;
+        rotate: 90deg;
+    }
+
+    .timeslot:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -5px;
+        width: 1px;
+        height: 100%;
+        background: black;
+    }
+
+    .price {
+        color: green;
+        margin-top: 5px;
+    }
+
+    .highPrice {
+        color: red;
     }
 </style>
