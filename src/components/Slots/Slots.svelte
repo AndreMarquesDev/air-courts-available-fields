@@ -60,7 +60,7 @@
     </ul>
 </section>
 
-<style>
+<style lang="postcss">
     h1 {
         text-align: left;
         margin: 0;
@@ -103,27 +103,27 @@
         min-width: 43px;
         position: relative;
         text-align: center;
-    }
 
-    .timeslot::before {
-        content: "";
-        position: absolute;
-        top: 17px;
-        left: 50%;
-        width: 1px;
-        height: 20%;
-        background: black;
-        rotate: 90deg;
-    }
+        &::before {
+            content: "";
+            position: absolute;
+            top: 17px;
+            left: 50%;
+            width: 1px;
+            height: 20%;
+            background: black;
+            rotate: 90deg;
+        }
 
-    .timeslot:not(:last-child)::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: -5px;
-        width: 1px;
-        height: 100%;
-        background: black;
+        &:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: -5px;
+            width: 1px;
+            height: 100%;
+            background: black;
+        }
     }
 
     .price {
