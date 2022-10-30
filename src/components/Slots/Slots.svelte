@@ -14,7 +14,7 @@
 </script>
 
 <section>
-    <h1>{ClubId[clubData.clubId]}</h1>
+    <h2>{ClubId[clubData.clubId]}</h2>
 
     <ul class="listOfDays">
         {#each clubData.clubSlotsByDateList as club}
@@ -61,7 +61,7 @@
 </section>
 
 <style lang="postcss">
-    h1 {
+    h2 {
         text-align: left;
         margin: 0;
     }
@@ -83,7 +83,7 @@
 
     .dayWithSlots,
     .dayWithNoSlots {
-        margin: 7px 0;
+        margin: 12px 0;
     }
 
     .strikethrough {
