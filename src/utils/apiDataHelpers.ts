@@ -4,7 +4,7 @@ import type { ClubInfoWithoutSlots, ClubSlotsByDate } from 'src/types/ClubSlotsB
 import type { Slot, SlotWithoutPrice } from 'src/types/Slot';
 import { ClubId } from '../types/ClubId';
 
-export const DEFAULT_START_TIME = '18%3A00'; // 18:00
+export const DEFAULT_START_TIME = '17%3A00'; // 17:00
 const FUTEBOL_7_ID = 2;
 const afterHoursTimeslots = ['23:30', '00:00', '00:30', '01:00'];
 
@@ -37,6 +37,7 @@ const pruneSlotData = ({ date, start, end, id, court_id }: ApiSlot): SlotWithout
         start,
         end,
         id,
+        // eslint-disable-next-line camelcase
         courtId: court_id,
     };
 };
