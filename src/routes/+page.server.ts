@@ -1,4 +1,4 @@
-import type { ClubData } from 'src/types/ClubData';
+import type { ClubData } from '../types/ClubData';
 import { buildClubInfo, clubsList, getFilteredDataFromApi } from '../utils/apiDataHelpers';
 import { getNextSevenDaysDates } from '../utils/dateHelpers';
 import type { PageServerLoad } from './$types';

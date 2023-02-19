@@ -1,8 +1,8 @@
-import type { ApiRawData, ApiSlot } from 'src/types/ApiSlot';
-import type { ApiSlotPrice } from 'src/types/ApiSlotPrice';
-import type { ClubInfoWithoutSlots, ClubSlotsByDate } from 'src/types/ClubSlotsByDate';
-import type { Slot, SlotWithoutPrice } from 'src/types/Slot';
+import type { ApiSlot, ApiRawData } from '../types/ApiSlot';
+import type { ApiSlotPrice } from '../types/ApiSlotPrice';
 import { ClubId } from '../types/ClubId';
+import type { ClubInfoWithoutSlots, ClubSlotsByDate } from '../types/ClubSlotsByDate';
+import type { SlotWithoutPrice, Slot } from '../types/Slot';
 
 export const DEFAULT_START_TIME = '17%3A00'; // 17:00
 const FUTEBOL_7_ID = 2;
