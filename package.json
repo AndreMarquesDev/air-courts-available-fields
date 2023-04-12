@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@sveltejs/adapter-auto": "^2.0.0",
-    "@sveltejs/kit": "^1.7.2",
+    "@sveltejs/kit": "^1.15.4",
     "postcss": "^8.4.14",
     "postcss-load-config": "^4.0.1",
     "postcss-nesting": "^10.2.0",
