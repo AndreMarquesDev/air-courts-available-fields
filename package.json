@@ -9,27 +9,33 @@
     "lint": "tsc --noEmit && eslint . --ext .js,.ts,.tsx",
     "lint:fix": "tsc --noEmit && eslint . --ext .js,.ts,.tsx --fix"
   },
+  "engines": {
+      "node": ">=18.13.0 <19",
+      "yarn": "1"
+  },
   "dependencies": {
-    "@sveltejs/adapter-auto": "^2.0.0",
-    "@sveltejs/kit": "^1.15.4",
-    "postcss": "^8.4.14",
+    "@sveltejs/adapter-auto": "^2.1.0",
+    "@sveltejs/kit": "^1.20.2",
+    "date-fns": "^2.30.0",
+    "postcss": "^8.4.24",
     "postcss-load-config": "^4.0.1",
-    "postcss-nesting": "^10.2.0",
-    "svelte": "^3.55.0",
-    "svelte-check": "^3.0.3",
-    "svelte-preprocess": "^5.0.1",
-    "tslib": "^2.3.1",
-    "vite": "^4.1.2"
+    "postcss-nesting": "^11.3.0",
+    "svelte": "^3.59.1",
+    "svelte-check": "^3.4.3",
+    "svelte-preprocess": "^5.0.4",
+    "tslib": "^2.5.3",
+    "vite": "^4.3.9"
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",
-    "eslint": "8.33.0",
+    "eslint": "8.42.0",
     "eslint-config-andremarquesdev": "^1.3.2",
     "eslint-plugin-svelte3": "^4.0.0",
-    "prettier-plugin-svelte": "^2.7.0",
-    "typescript": "^4.7.4"
+    "prettier-plugin-svelte": "^2.10.1",
+    "typescript": "^5.1.3"
   },
   "resolutions": {
-      "json5": "^2.2.3"
+    "json5": "^2.2.3",
+    "yaml": "^2.2.2"
   }
 }

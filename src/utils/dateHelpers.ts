@@ -1,22 +1,7 @@
+import { add, format } from 'date-fns';
+import pt from 'date-fns/locale/pt/index';
+import enCA from 'date-fns/locale/en-CA/index';
 import type { ClubInfoWithoutSlots } from '../types/ClubSlotsByDate';
-
-// format date to dd/mm/yyyy
-const formatDate = (date: Date): string[] =>
-    date
-        .toLocaleString('pt-PT', {
-            timeZone: 'Europe/Lisbon',
-            weekday: 'long',
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-        })
-        .split(', ');
-
-// format date to yyyy-mm-dd
-const formatDateForApi = (date: Date): string =>
-    date.toLocaleString('en-CA', { timeZone: 'Europe/Lisbon' }).slice(0, 10);
-
-const addOneDayToDate = (date: Date): number => date.setDate(date.getDate() + 1);
 
 export const getNextSevenDaysDates = (): ClubInfoWithoutSlots[] => {
     const date = new Date();
@@ -24,12 +9,15 @@ export const getNextSevenDaysDates = (): ClubInfoWithoutSlots[] => {
     const nextSevenDaysDates: ClubInfoWithoutSlots[] = [];
 
     for (let index = 0; index < 7; index++) {
+        let newDate = date;
+
         if (index > 0) {
-            addOneDayToDate(date);
+            newDate = add(date, { days: index });
         }
 
-        const [weekday, formattedDate] = formatDate(date);
-        const apiDate = formatDateForApi(date);
+        const formattedDate = format(newDate, 'dd/MM/yyyy', { locale: pt });
+        const weekday = format(newDate, 'EEEE', { locale: pt });
+        const apiDate = format(newDate, 'yyyy-MM-dd', { locale: enCA });
 
         nextSevenDaysDates.push({
             weekday,
