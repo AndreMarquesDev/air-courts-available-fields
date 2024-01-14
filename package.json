@@ -10,29 +10,31 @@
     "lint:fix": "tsc --noEmit && eslint . --ext .js,.ts,.tsx --fix"
   },
   "engines": {
-      "node": ">=18.13.0 <19",
-      "yarn": "1"
+    "node": ">=18.13.0 <19",
+    "yarn": "1"
   },
   "dependencies": {
-    "@sveltejs/adapter-auto": "^2.1.0",
-    "@sveltejs/kit": "^1.20.2",
+    "@sveltejs/adapter-auto": "^3.1.0",
+    "@sveltejs/kit": "^2.3.2",
+    "@sveltejs/vite-plugin-svelte": "^3.0.1",
+    "@vercel/analytics": "^1.1.1",
     "date-fns": "^2.30.0",
-    "postcss": "^8.4.24",
-    "postcss-load-config": "^4.0.1",
-    "postcss-nesting": "^11.3.0",
-    "svelte": "^3.59.1",
-    "svelte-check": "^3.4.3",
-    "svelte-preprocess": "^5.0.4",
-    "tslib": "^2.5.3",
-    "vite": "^4.3.9"
+    "postcss": "^8.4.33",
+    "postcss-load-config": "^5.0.2",
+    "postcss-nesting": "^12.0.2",
+    "svelte": "^4.2.8",
+    "svelte-check": "^3.6.3",
+    "svelte-preprocess": "^5.1.3",
+    "tslib": "^2.6.2",
+    "vite": "^5.0.11"
   },
   "devDependencies": {
-    "@types/cookie": "^0.5.1",
+    "@types/cookie": "^0.6.0",
     "eslint": "8.48.0",
     "eslint-config-andremarquesdev": "^1.3.3",
     "eslint-plugin-svelte3": "^4.0.0",
     "prettier-plugin-svelte": "^2.10.1",
-    "typescript": "^5.1.3"
+    "typescript": "^5.3.3"
   },
   "resolutions": {
     "json5": "^2.2.3",
