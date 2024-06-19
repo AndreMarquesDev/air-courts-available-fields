@@ -10,15 +10,16 @@ Available at [air-courts-available-fields.vercel.app](https://air-courts-availab
 
 ### Technologies
 
-<a href="https://svelte.dev/" target="_blank">![Svelte Badge](https://img.shields.io/badge/Svelte_v3-%23f1413d?style=for-the-badge&logo=svelte&logoColor=white)</a>
-<a href="https://kit.svelte.dev/" target="_blank">![SvelteKit Badge](https://img.shields.io/badge/Svelte_Kit_v1-%23f1413d?style=for-the-badge&logo=svelte&logoColor=white)</a>
-<a href="https://www.typescriptlang.org/" target="_blank">![Typescript Badge](https://img.shields.io/badge/TypeScript_v4-007ACC?style=for-the-badge&logo=typescript&logoColor=white)</a>
+<a href="https://svelte.dev/" target="_blank">![Svelte Badge](https://img.shields.io/badge/Svelte_v4-%23f1413d?style=for-the-badge&logo=svelte&logoColor=white)</a>
+<a href="https://kit.svelte.dev/" target="_blank">![SvelteKit Badge](https://img.shields.io/badge/Svelte_Kit_v2-%23f1413d?style=for-the-badge&logo=svelte&logoColor=white)</a>
+<a href="https://www.typescriptlang.org/" target="_blank">![Typescript Badge](https://img.shields.io/badge/TypeScript_v5-007ACC?style=for-the-badge&logo=typescript&logoColor=white)</a>
+<a href="https://nodejs.org/" target="_blank">![Node Badge](https://img.shields.io/badge/Node_v20-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)</a>
 <a href="https://vercel.com/" target="_blank">![Vercel Badge](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)</a>
 
 ### Author
 
 André Marques  
-[Website](https://andremarquesdev.com)  
+[Website](https://andremarquesdev.eu)  
 [GitHub](https://github.com/AndreMarquesDev)  
 [CodePen](https://codepen.io/AndreMarquesDev)  
 [Twitter](https://twitter.com/axxyJS)  
