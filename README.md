@@ -1,4 +1,6 @@
-# air-courts-available-fields  
+_This is no longer working since it relied on the [AirCourts](https://www.aircourts.com/) website API which was deprecated. It was still a fun project and served its purpose 🙂_
+
+# [DEPRECATED] air-courts-available-fields  
 
 A simple web app to display football fields and their available timeslots in Lisbon from the [AirCourts](https://www.aircourts.com/) website.
 

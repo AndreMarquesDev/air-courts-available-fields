@@ -12,6 +12,11 @@
 
 <footer>
     <p>
+        Data from <a href="https://www.aircourts.com" target="_blank"
+            >https://www.aircourts.com</a
+        >
+    </p>
+    <p>
         Developed by <a
             href="https://github.com/AndreMarquesDev"
             target="_blank">AndreMarquesDev</a
@@ -36,6 +41,7 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        gap: 16px;
         padding: 40px;
     }
 </style>

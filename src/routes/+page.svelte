@@ -16,6 +16,13 @@
 </svelte:head>
 
 <section>
+    <p>
+        This is no longer working since it relied on the
+        <a href="https://www.aircourts.com" target="_blank">AirCourts</a> website
+        API which was deprecated. It was still a fun project and served its purpose
+        🙂
+    </p>
+
     <h1>⚽ Pontapés na Atmosfera ⚽</h1>
 
     {#each allClubsInfo as clubsInfoList}
@@ -28,6 +35,11 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    p {
+        width: 100%;
+        text-align: center;
     }
 
     h1 {
