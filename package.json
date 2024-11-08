@@ -1,46 +1,48 @@
 {
-  "name": "air-courts-available-fields",
-  "version": "0.0.1",
-  "type": "module",
-  "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview",
-    "lint": "tsc --noEmit && eslint . --ext .js,.ts,.tsx",
-    "lint:fix": "tsc --noEmit && eslint . --ext .js,.ts,.tsx --fix"
-  },
-  "engines": {
-    "node": ">=20.11.0 <21",
-    "yarn": "4.3.0"
-  },
-  "dependencies": {
-    "@sveltejs/adapter-auto": "^3.2.2",
-    "@sveltejs/kit": "^2.5.17",
-    "@sveltejs/vite-plugin-svelte": "^3.1.1",
-    "@vercel/analytics": "^1.3.1",
-    "date-fns": "^2.30.0",
-    "postcss": "^8.4.38",
-    "postcss-load-config": "^5.1.0",
-    "postcss-nesting": "^12.1.5",
-    "svelte": "^4.2.18",
-    "svelte-check": "^3.8.1",
-    "svelte-preprocess": "^5.1.4",
-    "tslib": "^2.6.3",
-    "vite": "^5.3.1"
-  },
-  "devDependencies": {
-    "@types/cookie": "^0.6.0",
-    "eslint": "8.48.0",
-    "eslint-config-andremarquesdev": "^1.3.3",
-    "eslint-plugin-svelte3": "^4.0.0",
-    "prettier-plugin-svelte": "^3.2.4",
-    "typescript": "^5.4.5"
-  },
-  "resolutions": {
-    "braces": "^3.0.3",
-    "json5": "^2.2.3",
-    "semver": "^7.5.4",
-    "yaml": "^2.2.2"
-  },
-  "packageManager": "yarn@4.3.0"
+    "name": "air-courts-available-fields",
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+        "dev": "vite dev",
+        "build": "vite build",
+        "preview": "vite preview",
+        "lint": "tsc --noEmit && eslint . --ext .js,.ts,.tsx",
+        "lint:fix": "tsc --noEmit && eslint . --ext .js,.ts,.tsx --fix"
+    },
+    "engines": {
+        "node": ">=20.11.0 <21",
+        "yarn": "4.3.0"
+    },
+    "dependencies": {
+        "@sveltejs/adapter-auto": "^3.3.1",
+        "@sveltejs/kit": "^2.8.0",
+        "@sveltejs/vite-plugin-svelte": "^3.1.2",
+        "@vercel/analytics": "^1.3.2",
+        "date-fns": "^2.30.0",
+        "postcss": "^8.4.38",
+        "postcss-load-config": "^5.1.0",
+        "postcss-nesting": "^12.1.5",
+        "svelte": "^4.2.19",
+        "svelte-check": "^3.8.6",
+        "svelte-preprocess": "^5.1.4",
+        "tslib": "^2.8.1",
+        "vite": "^5.4.10"
+    },
+    "devDependencies": {
+        "@types/cookie": "^0.6.0",
+        "eslint": "8.48.0",
+        "eslint-config-andremarquesdev": "^1.3.3",
+        "eslint-plugin-svelte3": "^4.0.0",
+        "prettier-plugin-svelte": "^3.2.7",
+        "typescript": "^5.6.3"
+    },
+    "resolutions": {
+        "braces": "^3.0.3",
+        "cookie": "^0.7.0",
+        "json5": "^2.2.3",
+        "micromatch": "^4.0.8",
+        "semver": "^7.5.4",
+        "yaml": "^2.2.2"
+    },
+    "packageManager": "yarn@4.3.0"
 }
